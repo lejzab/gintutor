@@ -2,6 +2,7 @@ package render
 
 import (
 	"fmt"
+	"github.com/lejzab/gintutor/pkg/config"
 	"html/template"
 	"log"
 	"net/http"
@@ -10,18 +11,20 @@ import (
 
 var functions = template.FuncMap{}
 
+var app *config.AppConfig
+
+func NewTemplates(a *config.AppConfig) {
+	app = a
+}
+
 // RenderTemplate renders template using html/template
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	tc, err := CreateTemplateCache()
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	tc := app.TemplateCache
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal(err)
+		log.Fatal("Could not get template from template cache")
 	}
-	err = t.Execute(w, nil)
+	err := t.Execute(w, nil)
 	if err != nil {
 		fmt.Printf("error parsing template: %s. error: %s", tmpl, err)
 	}
