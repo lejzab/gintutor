@@ -2,6 +2,7 @@ package render
 
 import (
 	"fmt"
+	"github.com/lejzab/gintutor/models"
 	"github.com/lejzab/gintutor/pkg/config"
 	"html/template"
 	"log"
@@ -17,8 +18,13 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
+// AddDefaultData adds default date to template data
+func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+	return td
+}
+
 // RenderTemplate renders template using html/template
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 	if app.UseCache {
 		tc = app.TemplateCache
@@ -29,9 +35,10 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	if !ok {
 		log.Fatal("Could not get template from template cache")
 	}
-	err := t.Execute(w, nil)
+	td = AddDefaultData(td)
+	err := t.Execute(w, td)
 	if err != nil {
-		fmt.Printf("error parsing template: %s. error: %s", tmpl, err)
+		fmt.Printf("error parsing template: %s. error: %s\n", tmpl, err)
 	}
 }
 
