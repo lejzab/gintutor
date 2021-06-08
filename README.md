@@ -1,8 +1,9 @@
-GO WEB STUB APP
+#GO WEB STUB APP
 
+### good start point to write go web apps.
 
-good start point to write go web apps. 
- - router
- - sessions
- - templates
+basic app, having some starting features, including:
+- router
+- sessions
+- templates
  
